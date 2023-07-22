@@ -4,7 +4,7 @@ import cors from 'cors';
 
 import * as utils from './utils'
 import WAClient from './whatsapp_client'
-import AppWrapper from './appwrapper'
+import Chatbot from './chatbot'
 
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -14,7 +14,7 @@ const api_port = 40001
 const api = express();
 
 const wa = new WAClient();
-const chatbot = new AppWrapper(wa.client)
+const chatbot = new Chatbot(wa.client)
 
 wa.initialize(chatbot)
 

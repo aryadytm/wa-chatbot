@@ -11,15 +11,14 @@ import Notification from "./features/notification"
 import * as utils from "./utils"
 import KeyValueStore from "./key_value_store"
 import WAWebJS from "whatsapp-web.js"
-
+import MessageContext from "./context"
 
 
 // App
-class AppWrapper {
+export default class Chatbot {
     features: Array<Feature>
     attachedFeature: KeyValueStore
-    contextTimeoutSecs: number
-    
+    featureTimeoutSecs: number
     
     constructor(messenger: WAWebJS.Client) {
         // client: WhatsApp client
@@ -38,37 +37,41 @@ class AppWrapper {
         }
         
         this.attachedFeature = new KeyValueStore(new Idle())
-        this.contextTimeoutSecs = 300
+        this.featureTimeoutSecs = 300
     }
     
-    getAttachedFeature(sender) {
+    getAttachedFeature(sender: string): Feature {
         return this.attachedFeature.get(sender)
     }
     
-    setAttachedFeature(sender, attachedFeature) {
+    setAttachedFeature(sender: string, attachedFeature: Feature) {
         this.attachedFeature.set(sender, attachedFeature)
     }
     
-    isIdle(sender) {
+    isIdle(sender: string) {
         return this.getAttachedFeature(sender) instanceof Idle
     }
     
-    setIdle(sender) {
+    setIdle(sender: string) {
         console.log(`[Set Idle "${sender}"]`)
         this.setAttachedFeature(sender, new Idle())
     }
     
-    handleCommand(command) {
-        // TODO: If isSelf, don't handle!
+    onMessage(context: MessageContext) {
         
-        const sender = command.from
+        if (context.message.fromMe) {
+            // Don't do anything if message is from the bot itself
+            return
+        }
+        
+        const sender = context.message.from
         
         if (!this.isIdle(sender)) {
             const attachedFeature = this.getAttachedFeature(sender)
             const attachedFeatureState = attachedFeature.getState(sender)
             
             // It is attached to non idle feature. Detach if no action for more than X seconds.
-            if (utils.currentTimeSecs() > attachedFeatureState.lastActionTime + this.contextTimeoutSecs) {
+            if (utils.currentTimeSecs() > attachedFeatureState.lastActionTime + this.featureTimeoutSecs) {
                 attachedFeatureState.detach()
             }
             // Make sure the attached feature is not detached
@@ -76,21 +79,19 @@ class AppWrapper {
                 this.setIdle(sender)
             } else {
                 // It is still attached. Handle command to attached feature
-                return attachedFeature.handleCommand(command, attachedFeatureState)
+                return attachedFeature.onReceiveMessage(context, attachedFeatureState)
             }
         }
         
-        for (let feat of this.features) {
-            const initialState = feat.getState(sender)
+        for (let feature of this.features) {
+            const initialState = feature.getState(sender)
             
             // Activate the matching feature.
-            if (feat.shouldAttach(command, initialState)) {
+            if (feature.shouldAttach(context, initialState)) {
                 initialState.attach()
-                this.setAttachedFeature(sender, feat)
-                return feat.onReceiveMessage(command, initialState)
+                this.setAttachedFeature(sender, feature)
+                return feature.onReceiveMessage(context, initialState)
             }
         }
     }
 }
-
-export default AppWrapper

@@ -1,21 +1,18 @@
 //@ts-check
 import * as readline from "readline"
-import AppWrapper from './appwrapper'
+import Chatbot from './chatbot'
 
 
-const cli = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
+const cli = readline.createInterface({ input: process.stdin, output: process.stdout })
 
 // CLI interface for emulating responses
 const messenger = {
-    sendMessage: (user: any, message: string) => {
+    sendMessage: (user: string, message: string) => {
         console.log(`# Response: ${message}`)
     }
 }
 
-const app = new AppWrapper(messenger)
+const app = new Chatbot(messenger)
 
 
 // 1 on 1 chat command
@@ -30,21 +27,21 @@ const commandTemplate = {
 
 const main = () => {
     cli.question("----------\n> Command: ", text => {
-    
+
         if (text === "/exit") {
             return cli.close()
         }
-        
-        const command = {...commandTemplate}
+
+        const command = { ...commandTemplate }
         command.body = text
         command.timestamp = Math.floor(Date.now() / 1000)
-        
-        const resp = app.handleCommand(command)
-        
+
+        const resp = app.onMessage(command)
+
         if ((typeof resp) === "string") {
             console.log(`# Response\n----------\n${resp}`)
         }
-        
+
         main()
     })
 }
