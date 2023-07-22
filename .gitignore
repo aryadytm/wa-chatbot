@@ -1,0 +1,4 @@
+node_modules
+package-lock.json
+wwebjs_auth/session*
+vendor/*

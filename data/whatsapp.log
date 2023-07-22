@@ -1,0 +1,61 @@
+=============================
+time: 2023-7-22 10:6:29
+from: 6281219149660@c.us
+author: undefined
+to: 6287761467038@c.us
+mediaKey: undefined
+-----------body--------------
+help
+-----------response----------
+AIE Bot - Menu Bantuan
+
+Fitur Bantuan
+
+*bantuan* - Menampilkan daftar perintah dalam bahasa Indonesia
+*help* - Menampilkan daftar perintah dalam bahasa Inggris
+
+Fitur Catatan
+
+*lupa* - Tampilkan menu dan daftar catatan
+*catat* - Buat catatan baru
+
+Fitur Notifikasi
+
+*notifikasi* - Tampilkan notifikasi yang sudah dijadwalkan
+*schedule* - Tambahkan jadwal notifikasi baru
+
+Untuk menggunakan fitur-fitur tersebut, kamu hanya perlu kirim *kata kunci* yang tersedia.
+
+Contoh: *bantuan*
+
+Nikmati beragam fitur AIE Bot lainnya (seperti *rewrite*, *ask*, dan *imagine*) dengan bergabung ke server Discord!
+=============================
+time: 2023-7-22 10:7:33
+from: 6281219149660@c.us
+author: undefined
+to: 6287761467038@c.us
+mediaKey: undefined
+-----------body--------------
+lupa
+-----------response----------
+Kamu lupa sesuatu? Ini adalah catatanmu:
+
+1) resep nasi
+
+Balas dengan nomor untuk melihat isi catatanmu.
+Balas *hapus <nomor>* untuk hapus catatan.
+Balas *catat* untuk tambah catatan.
+Balas *keluar* untuk keluar dari menu.
+
+=============================
+time: 2023-7-22 10:7:37
+from: 6281219149660@c.us
+author: undefined
+to: 6287761467038@c.us
+mediaKey: undefined
+-----------body--------------
+1
+-----------response----------
+resep nasi
+
+buat ayam dulu
