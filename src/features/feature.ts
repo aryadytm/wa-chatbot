@@ -4,12 +4,13 @@ import FeatureState from "../feature_state"
 import * as utils from "../utils"
 import MessageContext from "../context"
 
-class Feature {
-    contexts: object
+
+export default abstract class Feature {
+    intents: object
     state: KeyValueStore
     
     constructor() {
-        this.contexts = {
+        this.intents = {
             IDLE: 0,
         }
         // Manage different state for different senders
@@ -17,32 +18,28 @@ class Feature {
     }
     
     /**
-     * Returns the focus state of the feature
+     * Returns the help text of the feature. The returning text will be be included in "help" message.
+     */
+    abstract help(): string
+
+    /**
+     * Event that triggered when bot received message from user or group.
+     */
+    abstract onReceiveMessage(context: MessageContext): any
+    
+    /**
+     * Returns the focus state of the feature. Different sender have different state.
      */
     getState(sender: string): FeatureState {
         return this.state.get(sender)
-    }
-    
-    /**
-     * Returns the help text of the feature. The returning text will be be included in "help" message.
-     */
-    help(): string {
-        return ""
     }
 
     /**
      * DEPRECATED. 
      * Switches focus to current feature. This disables other features from responding.
      */
-    shouldAttach(context: MessageContext, state: FeatureState): boolean {
+    shouldAttach(context: MessageContext): boolean {
         return false
-    }
-
-    /**
-     * Event that triggered when bot received message from user or group.
-     */
-    onReceiveMessage(context: MessageContext, state: FeatureState) {
-
     }
     
     // getContext(sender) {
@@ -75,5 +72,3 @@ class Feature {
     // }
     
 }
-
-export default Feature

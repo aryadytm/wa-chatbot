@@ -101,8 +101,7 @@ class WAClient {
     }
 
     onClientMessage(message: wa.Message, chatbot: Chatbot) {
-        let context = new MessageContext(message)
-        chatbot.onMessage(context)
+        chatbot.onMessage(message)
     }
 
     getUrl() {

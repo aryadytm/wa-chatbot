@@ -2,24 +2,26 @@ import * as utils from "./utils"
 
 
 class FeatureState {
-    context: any
+    intent: any
     lastActionTime: number
     isAttached: boolean
-    temp: object
+    data: object
+    onAttach: CallableFunction
+    onDetach: CallableFunction
     
     constructor() {
         this.setDefault()
     }
     
     setDefault() {
-        this.context = 0
+        this.intent = 0
         this.lastActionTime = 0
         this.isAttached = false
-        this.temp = {}
+        this.data = {}
     }
     
-    setContext(context: any) {
-        this.context = context
+    setIntent(context: any) {
+        this.intent = context
         this.lastActionTime = utils.currentTimeSecs()
     }
     
@@ -27,10 +29,12 @@ class FeatureState {
         this.setDefault()
         this.isAttached = true
         this.lastActionTime = utils.currentTimeSecs()
+        this.onAttach()
     }
     
     detach() {
         this.isAttached = false
+        this.onDetach()
     }
     
 }

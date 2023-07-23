@@ -8,7 +8,7 @@ const cli = readline.createInterface({ input: process.stdin, output: process.std
 // CLI interface for emulating responses
 const messenger = {
     sendMessage: (user: string, message: string) => {
-        console.log(`# Response: ${message}`)
+        console.log(`[MESSENGER]\n${message}\n`)
     }
 }
 
@@ -23,6 +23,9 @@ const commandTemplate = {
     author: "",
     body: "",
     timestamp: 0,
+    reply: (resp: string) => {
+        console.log(`# Response\n----------\n${resp}`)
+    }
 }
 
 const main = () => {
@@ -36,11 +39,7 @@ const main = () => {
         command.body = text
         command.timestamp = Math.floor(Date.now() / 1000)
 
-        const resp = app.onMessage(command)
-
-        if ((typeof resp) === "string") {
-            console.log(`# Response\n----------\n${resp}`)
-        }
+        app.onMessage(command)
 
         main()
     })

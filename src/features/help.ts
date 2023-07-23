@@ -1,39 +1,31 @@
 //@ts-check
+import MessageContext from "../context"
+import FeatureState from "../feature_state"
 import Feature from "./feature"
 
-class Help extends Feature {
+
+export default class Help extends Feature {
     features: Array<Feature>
     
-    constructor(features) {
+    constructor(features: Array<Feature>) {
         super()
         this.features = features
     }
     
-    shouldAttach(command, state) { 
-        const inText = command.body.toLowerCase()
+    onReceiveMessage(context: MessageContext) {
         
-        if (inText === "help") return true
-        if (inText === "bantuan") return true
+        const msg = context.message.body.toLowerCase()
         
-        return false
-    }
-    
-    onReceiveMessage(command, state) {
-        state.detach()
-        
-        const msg = command.body.toLowerCase()
-        
-        if (msg == "help") {
-            return this._getHelpText()
+        if (msg === "help" || msg === "bantuan") {
+            context.reply(this._getHelpText())
         }
-        return this._getHelpText()
     }
     
     help() {
         return (
             "Fitur Bantuan\n\n" +
             "*bantuan* - Menampilkan daftar perintah dalam bahasa Indonesia\n" +
-            "*help* - Menampilkan daftar perintah dalam bahasa Inggris\n" +
+            // "*help* - Menampilkan daftar perintah dalam bahasa Inggris\n" +
             ""
         )
     }
@@ -53,8 +45,4 @@ class Help extends Feature {
             "Nikmati beragam fitur AIE Bot lainnya (seperti *rewrite*, *ask*, dan *imagine*) dengan bergabung ke server Discord!"
         )
     }
-    
-    
 }
-
-export default Help

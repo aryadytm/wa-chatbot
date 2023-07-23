@@ -11,7 +11,7 @@ import Notification from "./features/notification"
 import * as utils from "./utils"
 import KeyValueStore from "./key_value_store"
 import WAWebJS from "whatsapp-web.js"
-import MessageContext from "./context"
+import MessageContext, { Message } from "./context"
 
 
 // App
@@ -21,9 +21,8 @@ export default class Chatbot {
     featureTimeoutSecs: number
     
     constructor(messenger: WAWebJS.Client) {
-        // client: WhatsApp client
         
-        // Features to use
+        // NOTE: Features to use
         const FEATURES = [
             new Forget(),
             new Notification(messenger)
@@ -57,20 +56,22 @@ export default class Chatbot {
         this.setAttachedFeature(sender, new Idle())
     }
     
-    onMessage(context: MessageContext) {
+    onMessage(message: Message) {
         
-        if (context.message.fromMe) {
+        if (message.fromMe) {
             // Don't do anything if message is from the bot itself
             return
         }
         
-        const sender = context.message.from
+        const sender = message.from
         
         if (!this.isIdle(sender)) {
+            // User is attached to a feature (not idle). 
             const attachedFeature = this.getAttachedFeature(sender)
             const attachedFeatureState = attachedFeature.getState(sender)
+            const context = new MessageContext(message, attachedFeatureState)
             
-            // It is attached to non idle feature. Detach if no action for more than X seconds.
+            // If no interaction for more than X seconds, detach it.
             if (utils.currentTimeSecs() > attachedFeatureState.lastActionTime + this.featureTimeoutSecs) {
                 attachedFeatureState.detach()
             }
@@ -79,19 +80,21 @@ export default class Chatbot {
                 this.setIdle(sender)
             } else {
                 // It is still attached. Handle command to attached feature
-                return attachedFeature.onReceiveMessage(context, attachedFeatureState)
+                return attachedFeature.onReceiveMessage(context)
             }
         }
         
         for (let feature of this.features) {
             const initialState = feature.getState(sender)
-            
-            // Activate the matching feature.
-            if (feature.shouldAttach(context, initialState)) {
-                initialState.attach()
+            initialState.onAttach = () => {
                 this.setAttachedFeature(sender, feature)
-                return feature.onReceiveMessage(context, initialState)
             }
+            initialState.onDetach = () => {
+                this.setIdle(sender)
+            }
+            
+            const context = new MessageContext(message, initialState)
+            feature.onReceiveMessage(context)
         }
     }
 }

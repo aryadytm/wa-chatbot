@@ -1,20 +1,15 @@
 //@ts-check
+import MessageContext from "../context";
 import Feature from "./feature"
 
-class Idle extends Feature {
+export default class Idle extends Feature {
     
-    constructor() {
-        super()
+    help(): string {
+        return ""
     }
     
-    shouldAttach(command, state) { 
-        return false
-    }
-    
-    onReceiveMessage(command, state) {
+    onReceiveMessage(context: MessageContext) {
         
     }
     
 }
-
-export default Idle

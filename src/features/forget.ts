@@ -3,9 +3,10 @@
 import * as fs from "fs"
 import * as utils from "../utils"
 import Feature from "./feature"
+import MessageContext from "../context"
 
 
-class Forget extends Feature {
+export default class Forget extends Feature {
     path_data: string
     data: object
     maxEntriesPerAuthor: number
@@ -13,7 +14,7 @@ class Forget extends Feature {
     constructor() {
         super()
         
-        this.contexts = {
+        this.intents = {
             IDLE: 0,
             CHOOSE_LIST: 1,
             CREATE_TITLE: 11,
@@ -29,7 +30,7 @@ class Forget extends Feature {
         fs.writeFileSync(this.path_data, JSON.stringify(this.data))
     }
     
-    _insert(from, _title, _content) {
+    _insert(from: string, _title: string, _content: string) {
         if (!this.data.hasOwnProperty(from)) {
             this.data[from] = []
         }
@@ -41,7 +42,7 @@ class Forget extends Feature {
         this._commit()
     }
     
-    _delete(from, id) {
+    _delete(from: string, id: number) {
         if (!this.data.hasOwnProperty(from)) {
             return
         }
@@ -61,7 +62,7 @@ class Forget extends Feature {
         this._commit()
     }
     
-    _readTitles(from) {
+    _readTitles(from: string) {
         if (!this.data.hasOwnProperty(from)) {
             return "[ Catatan kamu kosong ]\n"
         }
@@ -90,29 +91,24 @@ class Forget extends Feature {
         )
     }
     
-    shouldAttach(command, state) { 
-        const inText = command.body.toLowerCase()
-        
-        if (inText === "lupa") return true
-        if (inText === "catat") return true
-        
-        return false
-    }
-    
-    onReceiveMessage(command, state) {
-        const msg = command.body
+    onReceiveMessage(context: MessageContext) {
+        const msg = context.message.body
         const cmd = (msg + "").toLowerCase()
-        const sender = command.from
+        const sender = context.message.from
         
-        if (cmd === "keluar" && state.context !== this.contexts.IDLE) {
-            state.detach()
-            return "Berhasil keluar. Sekarang kamu dapat menjalankan perintah lain."
+        if (cmd === "catat" || cmd === "lupa") {
+            context.featureState.attach()
         }
         
-        if (cmd === "lupa" && state.context === this.contexts.IDLE) {
-            state.setContext(this.contexts.CHOOSE_LIST)
+        if (cmd === "keluar" && context.featureState.intent !== this.intents.IDLE) {
+            context.featureState.detach()
+            return context.reply("Berhasil keluar. Sekarang kamu dapat menjalankan perintah lain.")
+        }
+        
+        if (cmd === "lupa" && context.featureState.intent === this.intents.IDLE) {
+            context.featureState.setIntent(this.intents.CHOOSE_LIST)
             
-            return (
+            return context.reply(
                 "Kamu lupa sesuatu? Ini adalah catatanmu:\n\n" + 
                 this._readTitles(sender) + "\n" +
                 "Balas dengan nomor untuk melihat isi catatanmu.\n" +
@@ -122,66 +118,60 @@ class Forget extends Feature {
             )
         }
         
-        else if (!isNaN(msg) && state.context === this.contexts.CHOOSE_LIST) {
-            state.detach()
+        else if (!isNaN(msg) && context.featureState.intent === this.intents.CHOOSE_LIST) {
+            context.featureState.detach()
             
             const index = parseInt(msg) - 1
             if (index >= 0 && index < this.data[sender].length) {
                 const note = this.data[sender][index]
-                return `${note.title}\n\n${note.content}`
+                return context.reply(`${note.title}\n\n${note.content}`)
             } else {
-                return `Tidak dapat menemukan catatan (${index}).`
+                return context.reply(`Tidak dapat menemukan catatan (${index}).`)
             }
         }
         
-        else if (cmd === "catat" &&
-            (state.context === this.contexts.IDLE || state.context === this.contexts.CHOOSE_LIST))
+        else if (cmd === "catat" && (context.featureState.intent === this.intents.IDLE || context.featureState.intent === this.intents.CHOOSE_LIST))
         {
             if (this.data.hasOwnProperty(sender) && this.data[sender].length >= this.maxEntriesPerAuthor) {
-                state.detach()
-                return `Telah mencapai maksimum ${this.maxEntriesPerAuthor} catatan.`
+                context.featureState.detach()
+                return context.reply(`Telah mencapai maksimum ${this.maxEntriesPerAuthor} catatan.`)
             }
-            state.setContext(this.contexts.CREATE_TITLE)
-            return "Ketik judul catatan yang kamu inginkan. Contoh: Resep Nasi Goreng Seafood."
+            context.featureState.setIntent(this.intents.CREATE_TITLE)
+            return context.reply("Ketik judul catatan yang kamu inginkan. Contoh: Resep Nasi Goreng Seafood.")
         }
         
-        else if (cmd.startsWith("hapus ") && state.context === this.contexts.CHOOSE_LIST) {
+        else if (cmd.startsWith("hapus ") && context.featureState.intent === this.intents.CHOOSE_LIST) {
             const num = cmd.replace("hapus ", "")
             if (!isNaN(num)) {
                 const index = parseInt(num) - 1
                 if (index >= 0 && index < this.data[sender].length) {
                     this._delete(sender, index)
-                    state.detach()
-                    return `Catatan (${num}) berhasil dihapus.`
+                    context.featureState.detach()
+                    return context.reply(`Catatan (${num}) berhasil dihapus.`)
                 } else {
-                    return `Tidak dapat menemukan nomor (${num}).`
+                    return context.reply(`Tidak dapat menemukan nomor (${num}).`)
                 }
             } 
         }
             
-        else if (state.context === this.contexts.CREATE_TITLE) {
+        else if (context.featureState.intent === this.intents.CREATE_TITLE) {
             if (msg.length < 5) {
-                return "Minimum judul harus 5 karakter"
+                return context.reply("Minimum judul harus 5 karakter")
             }
-            state.temp.title = "" + msg
-            state.setContext(this.contexts.CREATE_CONTENT)
-            return `Sekarang ketik catatanmu yang berjudul "${msg}"`
+            context.featureState.data.title = "" + msg
+            context.featureState.setIntent(this.intents.CREATE_CONTENT)
+            return context.reply(`Sekarang ketik catatanmu yang berjudul "${msg}"`)
         }
         
-        else if (state.context === this.contexts.CREATE_CONTENT) {
+        else if (context.featureState.intent === this.intents.CREATE_CONTENT) {
             if (msg.length < 10) {
                 return "Minimum catatan harus 10 karakter"
             }
-            state.detach()
+            context.featureState.detach()
             
             // TODO: Handle image, and caption!
-            this._insert(sender, state.temp.title, msg)
-            return "Catatanmu berhasil ditambahkan. Untuk melihatnya, ketik *lupa*"
+            this._insert(sender, context.featureState.data.title, msg)
+            return context.reply("Catatanmu berhasil ditambahkan. Untuk melihatnya, ketik *lupa*")
         }
-        
     }
-    
 }
-
-
-export default Forget

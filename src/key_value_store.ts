@@ -15,7 +15,7 @@ class KeyValueStore {
         this.datastore[key] = this.defaultValue
     }
     
-    prepare(key) {
+    prepare(key: string) {
         if (!this.datastore.hasOwnProperty(key)) {
             this.setDefault(key)
         }

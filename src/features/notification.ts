@@ -6,9 +6,11 @@ import dayjs from 'dayjs'
 
 import * as utils from "../utils"
 import Feature from "./feature"
+import WAWebJS from "whatsapp-web.js";
+import MessageContext from "../context";
 
 
-class Notification extends Feature {
+export default class Notification extends Feature {
     messenger: any
     path_data: string
     timezone: string
@@ -16,11 +18,11 @@ class Notification extends Feature {
     maxEntriesPerAuthor: number
     crons: Array<any>
     
-    constructor(messenger) {
+    constructor(messenger: WAWebJS.Client) {
         super()
         this.messenger = messenger
 
-        this.contexts = {
+        this.intents = {
             IDLE: 0,
             SHOW_SCHEDULE: 11,
             CREATE_TIME: 21,
@@ -100,7 +102,7 @@ class Notification extends Feature {
         this._refreshCrons()
     }
 
-    _insert(from, timeString, cron, content) {
+    _insert(from: string, timeString: string, cron: string, content: string) {
         if (!this.data.hasOwnProperty(from)) {
             this.data[from] = []
         }
@@ -114,28 +116,28 @@ class Notification extends Feature {
         this._commit()
     } 
 
-    _delete(from, id) {
+    _delete(from: string, id) {
         if (!this.data.hasOwnProperty(from)) {
             return
         }
         if (this.data[from].length === 0) {
             return
         }
-        for (let sched of this.data[from]) {
-            if (sched.id == id) {
-                this.data[from].splice(this.data[from].indexOf(sched), 1)
+        for (let schedule of this.data[from]) {
+            if (schedule.id == id) {
+                this.data[from].splice(this.data[from].indexOf(schedule), 1)
                 break
             }
         }
         // reorder the IDs
         let i = 0
-        for (let sched of this.data[from]) {
-            sched.id = i++;
+        for (let schedule of this.data[from]) {
+            schedule.id = i++;
         }
         this._commit()
     }
  
-    _getSortedSchedules(from) {
+    _getSortedSchedules(from: string) {
         // Sort crons until next schedule
         // Then use parseExpression to get next schedule time
         const sortedScheduleAsc = this.data[from].sort((a, b) => {
@@ -153,13 +155,8 @@ class Notification extends Feature {
         })
         return sortedScheduleAsc
     }
-    
-    /**
-     * 
-     * @param {string} from 
-     * @returns {string}
-     */
-    _readSchedules(from) {
+
+    _readSchedules(from: string) {
         if (!this.data.hasOwnProperty(from)) {
             return "[ Jadwal notifikasi kosong ]\n"
         }
@@ -211,7 +208,7 @@ class Notification extends Feature {
         )
     }
     
-    _handleTimeString(timeString) {
+    _handleTimeString(timeString: string) {
         const englishTimeString = utils.indonesianToEnglishTime(timeString)
         const cronFromInterval = utils.cronFromInterval(englishTimeString)
 
@@ -230,68 +227,70 @@ class Notification extends Feature {
     help() {
         return (
             "Fitur Notifikasi\n\n" +
+            "*buat notifikasi* - Tambahkan jadwal notifikasi baru\n" +
             "*notifikasi* - Tampilkan notifikasi yang sudah dijadwalkan\n" +
-            "*schedule* - Tambahkan jadwal notifikasi baru\n" +
             ""
         )
     }
 
-    shouldAttach(command, state) {
-        const inText = command.body.toLowerCase()
 
-        if (inText === "notifikasi") return true
-        if (inText === "schedule") return true
-
-        return false
-    }
-
-    onReceiveMessage(command, state) {
-        const msg = command.body
+    onReceiveMessage(context: MessageContext) {
+        const msg = context.message.body
         const cmd = (msg + "").toLowerCase()
-        const sender = command.from
+        const sender = context.message.from
 
-        if (cmd === "keluar" && state.context !== this.contexts.IDLE) {
-            state.detach()
-            return "Berhasil keluar. Sekarang kamu dapat menjalankan perintah lain."
+        if (cmd === "notifikasi" || cmd === "buat notifikasi") {
+            context.featureState.attach()
+        }
+        
+        if (cmd === "keluar" && context.featureState.intent !== this.intents.IDLE) {
+            context.featureState.detach()
+            return context.reply("Berhasil keluar. Sekarang kamu dapat menjalankan perintah lain.")
         }
 
-        if (cmd === "notifikasi" && state.context === this.contexts.IDLE) {
-            state.setContext(this.contexts.SHOW_SCHEDULE)
+        if (cmd === "notifikasi" && context.featureState.intent === this.intents.IDLE) {
+            context.featureState.setIntent(this.intents.SHOW_SCHEDULE)
             
-            return (
+            return context.reply(
                 "Ini adalah jadwal notifikasi kamu:\n\n" +
                 this._readSchedules(sender) + "\n" +
                 "Balas *hapus <nomor>* untuk hapus notifikasi.\n" +
-                "Balas *schedule* untuk tambah notifikasi.\n" +
+                "Balas *buat notifikasi* untuk menambahkan jadwal notifikasi.\n" +
                 "Balas *keluar* untuk keluar dari menu.\n"
             )
         }
 
-        else if (cmd.startsWith("hapus ") && state.context === this.contexts.SHOW_SCHEDULE) {
+        else if (cmd.startsWith("hapus ") && context.featureState.intent === this.intents.SHOW_SCHEDULE) {
             const num = cmd.replace("hapus ", "")
             
             if (!isNaN(num)) {
+                
+                if (!this.data.hasOwnProperty(sender)) {
+                    return context.reply(`Daftar notifikasi kosong. Tidak bisa menghapus.`)
+                }
+                
                 const index = parseInt(num) - 1
+                
                 if (index >= 0 && index < this.data[sender].length) {
                     this._delete(sender, index)
-                    state.detach()
-                    return `Notifikasi (${num}) berhasil dihapus.`
+                    context.featureState.detach()
+                    return context.reply(`Notifikasi (${num}) berhasil dihapus.`)
                 } else {
-                    return `Tidak dapat menemukan nomor (${num}).`
+                    return context.reply(`Tidak dapat menemukan nomor (${num}).`)
                 }
             }
         }
 
-        else if (cmd === "schedule" &&
-            (state.context === this.contexts.IDLE || state.context === this.contexts.SHOW_SCHEDULE))
+        else if (cmd === "buat notifikasi" &&
+            (context.featureState.intent === this.intents.IDLE || context.featureState.intent === this.intents.SHOW_SCHEDULE))
         {
             if (this.data.hasOwnProperty(sender) && this.data[sender].length >= this.maxEntriesPerAuthor) {
-                state.detach()
-                return `Telah mencapai maksimum ${this.maxEntriesPerAuthor} notifikasi.`
+                context.featureState.detach()
+                return context.reply(`Telah mencapai maksimum ${this.maxEntriesPerAuthor} notifikasi.`)
             }
-            state.setContext(this.contexts.CREATE_TIME)
-            return (
-                "Ketik interval yang diinginkan:" + "\n\n" +
+            context.featureState.setIntent(this.intents.CREATE_TIME)
+            return context.reply(
+                "Tulis interval notifikasi yang diinginkan sesuai format:" + "\n\n" +
                 "*Harian <jam:menit>*\nContoh: Harian 13:30" + "\n\n" +
                 "*Mingguan <nama hari> <jam:menit>*\nContoh: Mingguan rabu 06:00" + "\n\n" +
                 "*Bulanan <tanggal> <jam:menit>*\nContoh: Bulanan 12 09:00" + "\n\n" +
@@ -303,30 +302,28 @@ class Notification extends Feature {
             )
         }
 
-        else if (state.context === this.contexts.CREATE_TIME) {
+        else if (context.featureState.intent === this.intents.CREATE_TIME) {
             const cron = this._handleTimeString(msg)
 
             if (cron === null) {
-                return "Format waktu tidak tepat."
+                return context.reply("Format waktu tidak tepat. Mohon untuk membaca ulang petunjuk.")
             }
 
-            state.temp.timeString = "" + msg
-            state.temp.cron = "" + cron
+            context.featureState.data.timeString = "" + msg
+            context.featureState.data.cron = "" + cron
             
-            state.setContext(this.contexts.CREATE_CONTENT)
-            return `Sekarang ketik tulisan yang akan dijadikan notifikasi.`
+            context.featureState.setIntent(this.intents.CREATE_CONTENT)
+            return context.reply(`Sekarang ketik teks yang akan dijadikan notifikasi.`)
         }
 
-        else if (state.context === this.contexts.CREATE_CONTENT) {
+        else if (context.featureState.intent === this.intents.CREATE_CONTENT) {
             if (msg.length < 10) {
-                return "Minimum tulisan 10 karakter"
+                return context.reply("Minimum teks pengingat 10 karakter")
             }
             // TODO: Handle image, and caption!
-            this._insert(sender, state.temp.timeString, state.temp.cron, msg)
-            state.detach()
-            return "Notifikasi berhasil ditambahkan. Untuk lihat jadwalnya, ketik *notifikasi*"
+            this._insert(sender, context.featureState.data.timeString, context.featureState.data.cron, msg)
+            context.featureState.detach()
+            return context.reply("Notifikasi berhasil ditambahkan. Untuk lihat jadwalnya, ketik *notifikasi*")
         }
     }
 }
-
-export default Notification
