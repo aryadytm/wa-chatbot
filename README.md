@@ -1,5 +1,39 @@
-# API for Sending Message through WA
+# WhatsApp Chatbot (Non API)
 
+## Features
+
+- Food recipes
+- Food nutritions
+- Memory notes
+- Schedule bot to send message at specific time (Notifications)
+- Send WA messages as bot using Rest API (see endpoints bellow)
+
+## Commands
+
+```
+Fitur Bantuan
+
+*bantuan* - Menampilkan daftar perintah dalam bahasa Indonesia
+
+Fitur Catatan
+
+*lupa* - Tampilkan menu dan daftar catatan
+*catat* - Buat catatan baru
+
+Fitur Notifikasi
+
+*buat notifikasi* - Tambahkan jadwal notifikasi baru
+*notifikasi* - Tampilkan notifikasi yang sudah dijadwalkan
+
+Fitur Makanan
+
+*info resep <nama makanan>* - Mencari resep dari nama makanan yang diberikan
+*info nutrisi <nama makanan>* - Mencari informasi nutrisi dari nama makanan yang diberikan
+
+Untuk menggunakan fitur-fitur tersebut, kamu hanya perlu kirim *kata kunci* yang tersedia.
+
+Contoh: *bantuan*
+```
 
 ## System Requirements
 
@@ -43,7 +77,7 @@
 6. You can start sending WA messages using HTTP Request to (GET) `https://{domain-name}.loca.lt/send_wa_message/{WA number}/{Message}` 
 
 
-## API Endpoints
+## WA API Endpoints
 
 (GET) Attach WA Account - Scan QR Code **(Required Before Able to Send WA Messages)** 
 ```

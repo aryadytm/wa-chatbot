@@ -13,7 +13,6 @@ export default class Help extends Feature {
     }
     
     onReceiveMessage(context: MessageContext) {
-        
         const msg = context.message.body.toLowerCase()
         
         if (msg === "help" || msg === "bantuan") {
@@ -38,11 +37,10 @@ export default class Help extends Feature {
         }
         
         return (
-            "AIE Bot - Menu Bantuan\n\n" +
+            "WA Chatbot Arya - Menu Bantuan\n\n" +
             featuresHelp +
             "Untuk menggunakan fitur-fitur tersebut, kamu hanya perlu kirim *kata kunci* yang tersedia.\n\n" +
-            "Contoh: *bantuan*\n\n" +
-            "Nikmati beragam fitur AIE Bot lainnya (seperti *rewrite*, *ask*, dan *imagine*) dengan bergabung ke server Discord!"
+            "Contoh: *bantuan*\n\n"
         )
     }
 }

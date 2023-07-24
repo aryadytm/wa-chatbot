@@ -18,13 +18,13 @@ const app = new Chatbot(messenger)
 // 1 on 1 chat command
 const commandTemplate = {
     hasMedia: false,
-    from: "6281219149660@c.us",
+    from: "6200000000000@c.us",
     to: "6285161409660@c.us",
     author: "",
     body: "",
     timestamp: 0,
     reply: (resp: string) => {
-        console.log(`# Response\n----------\n${resp}`)
+        console.log(`----------\n${resp}`)
     }
 }
 

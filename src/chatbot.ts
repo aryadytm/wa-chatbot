@@ -6,6 +6,7 @@ import Idle from "./features/idle"
 import Help from "./features/help"
 import Forget from "./features/forget"
 import Notification from "./features/notification"
+import Foodie from "./features/foodie"
 
 // Helpers
 import * as utils from "./utils"
@@ -25,7 +26,8 @@ export default class Chatbot {
         // NOTE: Features to use
         const FEATURES = [
             new Forget(),
-            new Notification(messenger)
+            new Notification(messenger),
+            new Foodie(),
         ]
         
         this.features = []
@@ -85,6 +87,11 @@ export default class Chatbot {
         }
         
         for (let feature of this.features) {
+            
+            if (!this.isIdle(sender)) {
+                break
+            }
+            
             const initialState = feature.getState(sender)
             initialState.onAttach = () => {
                 this.setAttachedFeature(sender, feature)
