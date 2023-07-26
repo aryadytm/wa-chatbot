@@ -1,0 +1,16 @@
+---
+version: '3'
+services:
+  waapid:
+    image: gyodor/wa-api:0.1.1
+    container_name: wa-api-d
+    restart: unless-stopped
+    volumes:
+    - ./data:/workdir/data
+    - ./src:/workdir/src
+    - ./wwebjs_auth:/workdir/wwebjs_auth
+    - ./package.json:/workdir/package.json
+    - ./config.json:/workdir/config.json
+    environment:
+    - TZ=Asia/Jakarta
+    command: sh -c "npm install && npx ts-node -T src/app.ts"

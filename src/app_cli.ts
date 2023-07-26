@@ -23,14 +23,17 @@ const commandTemplate = {
     author: "",
     body: "",
     timestamp: 0,
-    reply: (resp: string) => {
-        console.log(`----------\n${resp}`)
+    reply: async (resp: string | object) => {        
+        if (typeof(resp) === "string")
+            console.log(`----------\n${resp}`)
+        else
+            console.log(`----------\n{Object ${Object.keys(resp)}}`)
     }
 }
 
 const main = () => {
-    cli.question("----------\n> Command: ", text => {
-
+    cli.question("----------\n> Command: ", async text => {
+        
         if (text === "/exit") {
             return cli.close()
         }
@@ -40,6 +43,8 @@ const main = () => {
         command.timestamp = Math.floor(Date.now() / 1000)
 
         app.onMessage(command)
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         main()
     })

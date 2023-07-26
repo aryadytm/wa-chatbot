@@ -84,7 +84,7 @@ export default class Forget extends Feature {
     
     help() {
         return (
-            "Fitur Catatan\n\n" +
+            "*Fitur Catatan*\n\n" +
             "*lupa* - Tampilkan menu dan daftar catatan\n" +
             "*catat* - Buat catatan baru\n" +
             ""

@@ -5,7 +5,7 @@
 - Food recipes
 - Food nutritions
 - Memory notes
-- Schedule bot to send message at specific time (Notifications)
+- Schedule bot to send message at specific time (notifications)
 - Send WA messages as bot using Rest API (see endpoints bellow)
 
 ## Commands
@@ -46,7 +46,7 @@ Contoh: *bantuan*
 
 ## Installation and Usage
 
-**Before using the app**, please change your `{domain-name}` in `config.json`.
+**Before using the app**, please change the `{domain-name}` in `config.json`.
 
 **Installation Steps for Windows (Without Docker):**
 
@@ -77,6 +77,10 @@ Contoh: *bantuan*
 6. You can start sending WA messages using HTTP Request to (GET) `https://{domain-name}.loca.lt/send_wa_message/{WA number}/{Message}` 
 
 
+**Docker Development Build**
+
+Run `docker-compose -f docker-compose-build.yml up`
+
 ## WA API Endpoints
 
 (GET) Attach WA Account - Scan QR Code **(Required Before Able to Send WA Messages)** 
@@ -93,7 +97,7 @@ https://{domain-name}.loca.lt/send_wa_message/{WA number}/{Message}
 ## How it Works?
 
 This application emulates a browser instance (such as Google Chrome) inside the **Docker Container** system. 
-The browser then opens WhatsApp Web and sends the message using the browser instance.
+The browser then opens WhatsApp Web and interacts using the web interface via emulated browser.
 
 
 ## Configuration

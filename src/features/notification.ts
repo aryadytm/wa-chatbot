@@ -226,7 +226,7 @@ export default class Notification extends Feature {
 
     help() {
         return (
-            "Fitur Notifikasi\n\n" +
+            "*Fitur Notifikasi*\n\n" +
             "*buat notifikasi* - Tambahkan jadwal notifikasi baru\n" +
             "*notifikasi* - Tampilkan notifikasi yang sudah dijadwalkan\n" +
             ""

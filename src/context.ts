@@ -20,16 +20,16 @@ export default class MessageContext {
         this.featureState = featureState
     }
 
-    reply(text: string) {
+    reply(content: string | wa.MessageContent) {
         // Send
-        this.message.reply(text)
+        this.message.reply(content)
         // Log
-        appendMessageToFile(this.message, text, PATH_MESSAGE_LOG)
+        appendMessageToFile(this.message, content, PATH_MESSAGE_LOG)
     }
 }
 
 
-function appendMessageToFile(message: Message, response: string, filePath: string): void {
+function appendMessageToFile(message: Message, response: string | wa.MessageContent, filePath: string): void {
     const obj = {
         timestamp: message.timestamp,
         from: message.from,

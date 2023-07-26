@@ -2,6 +2,9 @@ import MessageContext from "../context";
 import Feature from "./feature";
 import sqlite3 from 'sqlite3';
 
+const COMMAND_INFO_RESEP = "info resep";
+const COMMAND_INFO_NUTRISI = "info nutrisi";
+const COMMAND_INFO_LIST_MAKANAN = "list makanan";
 
 interface Food {
     id: number,
@@ -9,7 +12,6 @@ interface Food {
     recipe: string,
     nutrition: string,
 }
-
 
 export default class Foodie extends Feature {
     db: sqlite3.Database;
@@ -21,29 +23,31 @@ export default class Foodie extends Feature {
 
     help() {
         return (
-            "Fitur Makanan\n\n" +
-            "*info resep <nama makanan>* - Mencari resep dari nama makanan yang diberikan\n" +
-            "*info nutrisi <nama makanan>* - Mencari informasi nutrisi dari nama makanan yang diberikan\n" +
+            "*Fitur Makanan*\n\n" +
+            `*${COMMAND_INFO_RESEP} <nama makanan>* - Mencari resep dari nama makanan yang diberikan\n` +
+            `*${COMMAND_INFO_NUTRISI} <nama makanan>* - Mencari informasi nutrisi dari nama makanan yang diberikan\n` +
+            `*${COMMAND_INFO_LIST_MAKANAN}* - Menampilkan daftar semua makanan\n` +
             ""
         );
     }
-    
+
     onReceiveMessage(context: MessageContext) {
         const msg = context.message.body.toLowerCase();
 
-        if (msg.startsWith('info resep')) {
-            const foodName = msg.split('info resep ')[ 1 ];
-            this.getRecipe(foodName, context);
-        }
-        else if (msg.startsWith('info nutrisi')) {
-            const foodName = msg.split('info nutrisi ')[ 1 ];
-            this.getNutrition(foodName, context);
+        if (msg.startsWith(COMMAND_INFO_RESEP)) {
+            const foodName = msg.split(`${COMMAND_INFO_RESEP} `)[ 1 ];
+            this.handleRecipe(foodName, context);
+        } else if (msg.startsWith(COMMAND_INFO_NUTRISI)) {
+            const foodName = msg.split(`${COMMAND_INFO_NUTRISI} `)[ 1 ];
+            this.handleNutrition(foodName, context);
+        } else if (msg.startsWith(COMMAND_INFO_LIST_MAKANAN)) {
+            this.handleList(context);
         }
     }
 
-    getRecipe(foodName: string, context: MessageContext) {
+    handleRecipe(foodName: string, context: MessageContext) {
         const query = `SELECT * FROM foods WHERE LOWER(name) LIKE '%' || LOWER(?) || '%'`;
-        
+
         this.db.get(query, [ foodName ], (err, row: Food) => {
             if (err) {
                 console.error(err);
@@ -56,9 +60,9 @@ export default class Foodie extends Feature {
         });
     }
 
-    getNutrition(foodName: string, context: MessageContext) {
+    handleNutrition(foodName: string, context: MessageContext) {
         const query = `SELECT * FROM foods WHERE LOWER(name) LIKE '%' || LOWER(?) || '%'`;
-        
+
         this.db.get(query, [ foodName ], (err, row: Food) => {
             if (err) {
                 console.error(err);
@@ -67,6 +71,22 @@ export default class Foodie extends Feature {
                 context.reply(`*Informasi Nutrisi ${row.name} (100g):*\n\n${row.nutrition}`);
             } else {
                 context.reply(`Tidak dapat menemukan nutrisi ${foodName}.`);
+            }
+        });
+    }
+
+    handleList(context: MessageContext) {
+        const query = `SELECT * FROM foods ORDER BY id`;
+
+        this.db.all(query, (err, rows: Food[]) => {
+            if (err) {
+                console.error(err);
+                context.reply('Terjadi error saat mengambil daftar makanan.');
+            } else if (rows.length > 0) {
+                const foodList = rows.map((food) => `${food.id}. ${food.name}`).join('\n');
+                context.reply(`*Daftar Makanan:*\n\n${foodList}`);
+            } else {
+                context.reply('Tidak ada makanan yang tersedia.');
             }
         });
     }
