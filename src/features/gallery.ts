@@ -21,7 +21,7 @@ export default class Gallery extends Feature {
 
     help(): string {
         return (
-            "*Fitur Galeri*\n\n" +
+            "_Fitur Galeri_\n\n" +
             `*${COMMAND_MINTA_GAMBAR} <kata kunci>* - Mencari gambar sesuai kata kunci\n` +
             `*${COMMAND_LIST_GALLERY}* - Menampilkan daftar semua gambar\n` +
             ""

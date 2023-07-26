@@ -22,7 +22,7 @@ export default class DocumentLibrary extends Feature {
 
     help(): string {
         return (
-            "*Fitur Dokumen*\n\n" +
+            "_Fitur Dokumen_\n\n" +
             `*${COMMAND_MINTA_DOKUMEN} <kata kunci>* - Mencari dokumen sesuai kata kunci\n` +
             `*${COMMAND_LIST_DOKUMEN}* - Menampilkan daftar semua dokumen\n` +
             ""

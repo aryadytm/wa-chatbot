@@ -22,7 +22,7 @@ export default class Help extends Feature {
     
     help() {
         return (
-            "*Fitur Bantuan*\n\n" +
+            "_Fitur Bantuan_\n\n" +
             "*bantuan* - Menampilkan daftar perintah dalam bahasa Indonesia\n" +
             // "*help* - Menampilkan daftar perintah dalam bahasa Inggris\n" +
             ""

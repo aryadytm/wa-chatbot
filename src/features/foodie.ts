@@ -23,7 +23,7 @@ export default class Foodie extends Feature {
 
     help() {
         return (
-            "*Fitur Makanan*\n\n" +
+            "_Fitur Makanan_\n\n" +
             `*${COMMAND_INFO_RESEP} <nama makanan>* - Mencari resep dari nama makanan yang diberikan\n` +
             `*${COMMAND_INFO_NUTRISI} <nama makanan>* - Mencari informasi nutrisi dari nama makanan yang diberikan\n` +
             `*${COMMAND_INFO_LIST_MAKANAN}* - Menampilkan daftar semua makanan\n` +
