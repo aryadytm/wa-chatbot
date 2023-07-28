@@ -83,7 +83,7 @@ export default class Foodie extends Feature {
                 console.error(err);
                 context.reply('Terjadi error saat mengambil daftar makanan.');
             } else if (rows.length > 0) {
-                const foodList = rows.map((food) => `${food.id}. ${food.name}`).join('\n');
+                const foodList = rows.map((food, index) => `${index + 1}. ${food.name}`).join('\n');
                 context.reply(`*Daftar Makanan:*\n\n${foodList}`);
             } else {
                 context.reply('Tidak ada makanan yang tersedia.');

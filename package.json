@@ -20,6 +20,7 @@
     "sqlite3": "^5.1.6",
     "ts-node": "*",
     "typescript": "*",
+    "uuid": "^9.0.0",
     "whatsapp-web.js": "^1.21.0"
   },
   "devDependencies": {

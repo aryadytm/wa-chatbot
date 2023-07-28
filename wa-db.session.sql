@@ -1,3 +1,3 @@
-delete from gallery where `name` like "Laporan%";
+delete from gallery where `name` like '%rumah bogor%' ;
 
 select * from gallery;

@@ -28,23 +28,23 @@ class WAClient {
         console.log(`[${utils.getCurrentDateString()}] Initializing WA client...`)
 
         // Use localtunnel to serve public
-        new Promise(resolve => setTimeout(resolve, 10000)).then(() => {
-            (async () => {
-                const tunnel = await localtunnel({
-                    subdomain: this.config.public_domain_name,
-                    port: 40001,
-                });
+        // new Promise(resolve => setTimeout(resolve, 10000)).then(() => {
+        //     (async () => {
+        //         const tunnel = await localtunnel({
+        //             subdomain: this.config.public_domain_name,
+        //             port: 40001,
+        //         });
 
-                console.log("Public URL has created.")
-                console.log(tunnel.url)
+        //         console.log("Public URL has created.")
+        //         console.log(tunnel.url)
 
-                tunnel.on('close', () => {
-                    console.log("Public URL has closed.")
-                });
+        //         tunnel.on('close', () => {
+        //             console.log("Public URL has closed.")
+        //         });
 
-                this.tunnel = tunnel
-            })();
-        })
+        //         this.tunnel = tunnel
+        //     })();
+        // })
 
         // Initialize WA
         this.isConnected = false
