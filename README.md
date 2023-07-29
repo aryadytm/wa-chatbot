@@ -1,4 +1,4 @@
-# WhatsApp Chatbot
+# WhatsApp Chatbot 🤖
 
 ## Features
 
