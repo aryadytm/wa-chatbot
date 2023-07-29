@@ -16,16 +16,6 @@ Fitur Bantuan
 
 bantuan - Menampilkan daftar perintah dalam bahasa Indonesia
 
-Fitur Catatan
-
-lupa - Tampilkan menu dan daftar catatan
-catat - Buat catatan baru
-
-Fitur Notifikasi
-
-buat notifikasi - Tambahkan jadwal notifikasi baru
-notifikasi - Tampilkan notifikasi yang sudah dijadwalkan
-
 Fitur Makanan
 
 info resep <nama makanan> - Mencari resep dari nama makanan yang diberikan
@@ -45,6 +35,16 @@ minta dokumen <kata kunci> - Mencari dokumen sesuai kata kunci
 list dokumen - Menampilkan daftar semua dokumen
 simpan dokumen <nama dokumen> - Menyimpan dokumen yang Anda kirim bersamaan dengan perintah
 hapus dokumen <nama dokumen> - Menghapus dokumen sesuai nama
+
+Fitur Catatan
+
+lupa - Tampilkan menu dan daftar catatan
+catat - Buat catatan baru
+
+Fitur Notifikasi
+
+buat notifikasi - Tambahkan jadwal notifikasi baru
+notifikasi - Tampilkan notifikasi yang sudah dijadwalkan
 ```
 
 ## System Requirements
