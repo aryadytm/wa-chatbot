@@ -7,7 +7,7 @@
 - Memory notes
 - Store and retrieve images
 - Store and retrieve documents
-- Send WA messages as bot using Rest API (see endpoints bellow)
+- Send WA messages as bot using Rest API (see endpoints below)
 
 ## Commands (Daftar Perintah)
 
@@ -60,10 +60,13 @@ notifikasi - Tampilkan notifikasi yang sudah dijadwalkan
 
 **Installation Steps for Windows (Without Docker):**
 
+Make sure Google Chrome is installed on the server system.
+
 1. Download and Install NodeJS LTS [Click Here](https://nodejs.org/en/download)
 2. Download this repository from this GitHub page by clicking green "code" button -> Local -> Download ZIP
 3. Extract the zip
-4. In the extracted folder, open CMD (Command Prompt)
+4. Open the extracted folder, then open `config.json`, then change the settings as you like
+5. In the extracted folder, open CMD (Command Prompt)
 6. Run `npm install`
 7. Run `npm run start`
 8. Scan the WhatsApp QR code in the terminal, then the chatbot is ready to use
@@ -72,17 +75,19 @@ notifikasi - Tampilkan notifikasi yang sudah dijadwalkan
 
 1. Download Docker Desktop and Install [Click Here](https://www.docker.com/products/docker-desktop/)
 2. Open CMD (Command Prompt) then run `git clone https://github.com/aryadytm/wa-chatbot`
-3. Change CMD directory to `wa-chatbot`
-6. In the terminal, run `docker-compose up` or `docker compose up`. Then wait until finished
-7. Scan the WhatsApp QR code in the terminal, then the chatbot is ready to use
+3. Open the `wa-chatbot` folder, then open `config.json`, then change the settings as you like
+4. Change CMD directory to `wa-chatbot`
+5. In the terminal, run `docker-compose up` or `docker compose up`. Then wait until finished
+6. Scan the WhatsApp QR code in the terminal, then the chatbot is ready to use
 
 **Installation Steps for Ubuntu (Linux):**
 
 1. Open Terminal then run `git clone https://github.com/aryadytm/wa-chatbot`
-2. Run `cd wa-chatbot`
-3. If your OS is **Ubuntu**, install Docker by running `sh install-docker.sh`. Otherwise, look for [Docker Installation Tutorials](https://docs.docker.com/engine/install/)
-4. Run `docker-compose up` or `docker compose up` then wait for few minutes
-5. Scan the WhatsApp QR code in the terminal, then the chatbot is ready to use
+2. Open the `wa-chatbot` folder, then open `config.json`, then change the settings as you like
+3. Run `cd wa-chatbot`
+4. If your OS is **Ubuntu**, install Docker by running `sh install-docker.sh`. Otherwise, look for [Docker Installation Tutorials](https://docs.docker.com/engine/install/)
+5. Run `docker-compose up` or `docker compose up` then wait for few minutes
+6. Scan the WhatsApp QR code in the terminal, then the chatbot is ready to use
 
 
 ## WA API Endpoints
@@ -114,3 +119,4 @@ You can change the subdomain and admin number in the `config.json`. The admin nu
 1. Open folder in VSCode devcontainer
 2. Run `sh ./setup.sh`
 3. Run `npm run start`
+4. (Optional) CLI Testing Mode: `npm run cli`
