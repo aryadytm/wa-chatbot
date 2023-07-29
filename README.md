@@ -1,4 +1,4 @@
-# WhatsApp Chatbot (Non API)
+# WhatsApp Chatbot
 
 ## Features
 
