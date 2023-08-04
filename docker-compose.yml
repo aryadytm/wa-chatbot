@@ -12,4 +12,4 @@ services:
     - ./wwebjs_auth:/workdir/wwebjs_auth
     environment:
     - TZ=Asia/Jakarta
-    command: sh -c "npm install && npx ts-node -T src/app.ts"
+    command: sh -c "npm install --force && npx ts-node -T src/app.ts"
