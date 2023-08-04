@@ -25,9 +25,9 @@ const commandTemplate = {
     timestamp: 0,
     reply: async (resp: string | object) => {        
         if (typeof(resp) === "string")
-            console.log(`----------\n${resp}`)
+            console.log(`\n----------\n${resp}`)
         else
-            console.log(`----------\n{Object ${Object.keys(resp)}}`)
+            console.log(`\n----------\n{Object ${Object.keys(resp)}}`)
     }
 }
 

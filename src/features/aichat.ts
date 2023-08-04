@@ -1,0 +1,73 @@
+import { ReadableStream } from 'web-streams-polyfill'
+global.ReadableStream = ReadableStream
+
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { HumanMessage, AIMessage, SystemMessage } from "langchain/schema";
+import { translate } from '@vitalets/google-translate-api';
+
+import MessageContext from "../context";
+import Feature from "./feature";
+
+import LanguageDetect from 'languagedetect';
+
+const langDetect = new LanguageDetect();
+langDetect.setLanguageType('iso2')
+
+const COMMAND_AI = "tolong";
+
+
+export default class AIChat extends Feature {
+    chat: ChatOpenAI;
+
+    constructor() {
+        super();
+        this.chat = new ChatOpenAI({
+            streaming: false,
+            openAIApiKey: "a_simple_password",
+            configuration: {
+                basePath: "https://llm.bytebooster.dev",
+            }
+        });
+    }
+
+    help(): string {
+        return (
+            "_Fitur AI (Kecerdasan Buatan)_\n\n" +
+            `*${COMMAND_AI} <pesan>* - Meminta AI cerdas untuk membantu apapun dari pesan Anda\n` +
+            ""
+        );
+    }
+
+    async onReceiveMessage(context: MessageContext) {
+        const msg = context.message.body.toLowerCase();
+
+        if (msg.startsWith(`${COMMAND_AI} `)) {
+            const query = msg.split(`${COMMAND_AI} `)[ 1 ];
+            await this.handleAiMessage(query, context);
+        }
+    }
+
+    async handleAiMessage(query: string, context: MessageContext) {
+        const detection = langDetect.detect(query)[ 0 ][ 0 ];
+        translate(query, { to: 'en' })
+            .then((translation) => {
+                this.chat.call([
+                    new SystemMessage("You need to role play as AI Assistant called \"WA Chatbot\" which is a multi-language helpful AI assistant integrated for WhatsApp. You are developed by \"Arya\". Your job to respond user's query accurately and precisely."),
+                    new HumanMessage(translation.text),
+                ])
+                    .then(async (response) => {
+                        // Translate the response back to the original language
+                        const translatedResponse = await translate(response.content.trim(), { to: detection });
+                        context.reply(translatedResponse.text);
+                    })
+                    .catch((error) => {
+                        context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+                    });
+            })
+            .catch((error) => {
+                context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+            });
+    }
+
+    
+}

@@ -9,13 +9,13 @@ import Notification from "./features/notification"
 import Foodie from "./features/foodie"
 import Gallery from "./features/gallery"
 import DocumentLibrary from "./features/document"
+import AIChat from "./features/aichat"
 
 // Helpers
 import * as utils from "./utils"
 import KeyValueStore from "./key_value_store"
 import WAWebJS from "whatsapp-web.js"
 import MessageContext, { Message } from "./context"
-
 
 // App
 export default class Chatbot {
@@ -32,6 +32,7 @@ export default class Chatbot {
             new Foodie(),
             new Gallery(),
             new DocumentLibrary(),
+            new AIChat(),
         ]
         
         this.features = []

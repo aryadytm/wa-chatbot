@@ -45,6 +45,10 @@ Fitur Notifikasi
 
 buat notifikasi - Tambahkan jadwal notifikasi baru
 notifikasi - Tampilkan notifikasi yang sudah dijadwalkan
+
+Fitur AI (Kecerdasan Buatan)
+
+tolong <pesan> - Meminta AI cerdas untuk membantu apapun dari pesan Anda
 ```
 
 ## System Requirements
