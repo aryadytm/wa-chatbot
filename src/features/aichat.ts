@@ -23,7 +23,7 @@ export default class AIChat extends Feature {
         super();
         this.chat = new ChatOpenAI({
             streaming: false,
-            openAIApiKey: "a_simple_password",
+            openAIApiKey: "a_whatsapp_user",
             configuration: {
                 basePath: "https://llm.bytebooster.dev",
             }
@@ -48,26 +48,36 @@ export default class AIChat extends Feature {
     }
 
     async handleAiMessage(query: string, context: MessageContext) {
-        const detection = langDetect.detect(query)[ 0 ][ 0 ];
-        translate(query, { to: 'en' })
-            .then((translation) => {
-                this.chat.call([
-                    new SystemMessage("You need to role play as AI Assistant called \"WA Chatbot\" which is a multi-language helpful AI assistant integrated for WhatsApp. You are developed by \"Arya\". Your job to respond user's query accurately and precisely."),
-                    new HumanMessage(translation.text),
-                ])
-                    .then(async (response) => {
-                        // Translate the response back to the original language
-                        const translatedResponse = await translate(response.content.trim(), { to: detection });
-                        context.reply(translatedResponse.text);
-                    })
-                    .catch((error) => {
-                        context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
-                    });
-            })
-            .catch((error) => {
-                context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
-            });
-    }
+        this.chat.call([
+            new SystemMessage("You need to role play as AI Assistant called \"WA Assistant\" which is a multi-language helpful AI assistant system developed by Arya that is integrated for WhatsApp. Your job to respond user's query accurately and precisely."),
+            new HumanMessage(query),
+        ]).then(async (response) => {
+            // Translate the response back to the original language
+            context.reply(response.content.trim());
+        }).catch((error) => {
+            context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+        });
+        
+    //     const detection = langDetect.detect(query)[ 0 ][ 0 ];
+    //     translate(query, { to: 'en' })
+    //         .then((translation) => {
+    //             this.chat.call([
+    //                 new SystemMessage("You need to role play as AI Assistant called \"WA Chatbot\" which is a multi-language helpful AI assistant integrated for WhatsApp. You are developed by \"Arya\". Your job to respond user's query accurately and precisely."),
+    //                 new HumanMessage(translation.text),
+    //             ])
+    //                 .then(async (response) => {
+    //                     // Translate the response back to the original language
+    //                     const translatedResponse = await translate(response.content.trim(), { to: detection });
+    //                     context.reply(translatedResponse.text);
+    //                 })
+    //                 .catch((error) => {
+    //                     context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+    //                 });
+    //         })
+    //         .catch((error) => {
+    //             context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+    //         });
+    // }
 
     
 }
