@@ -58,26 +58,26 @@ export default class AIChat extends Feature {
             context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
         });
         
-    //     const detection = langDetect.detect(query)[ 0 ][ 0 ];
-    //     translate(query, { to: 'en' })
-    //         .then((translation) => {
-    //             this.chat.call([
-    //                 new SystemMessage("You need to role play as AI Assistant called \"WA Chatbot\" which is a multi-language helpful AI assistant integrated for WhatsApp. You are developed by \"Arya\". Your job to respond user's query accurately and precisely."),
-    //                 new HumanMessage(translation.text),
-    //             ])
-    //                 .then(async (response) => {
-    //                     // Translate the response back to the original language
-    //                     const translatedResponse = await translate(response.content.trim(), { to: detection });
-    //                     context.reply(translatedResponse.text);
-    //                 })
-    //                 .catch((error) => {
-    //                     context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
-    //                 });
-    //         })
-    //         .catch((error) => {
-    //             context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
-    //         });
-    // }
-
+        //     const detection = langDetect.detect(query)[ 0 ][ 0 ];
+        //     translate(query, { to: 'en' })
+        //         .then((translation) => {
+        //             this.chat.call([
+        //                 new SystemMessage("You need to role play as AI Assistant called \"WA Chatbot\" which is a multi-language helpful AI assistant integrated for WhatsApp. You are developed by \"Arya\". Your job to respond user's query accurately and precisely."),
+        //                 new HumanMessage(translation.text),
+        //             ])
+        //                 .then(async (response) => {
+        //                     // Translate the response back to the original language
+        //                     const translatedResponse = await translate(response.content.trim(), { to: detection });
+        //                     context.reply(translatedResponse.text);
+        //                 })
+        //                 .catch((error) => {
+        //                     context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+        //                 });
+        //         })
+        //         .catch((error) => {
+        //             context.reply("Terjadi error saat bertanya ke AI. Mohon coba kembali.");
+        //         });
+        // }
+    }
     
 }
