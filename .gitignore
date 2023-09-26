@@ -1,5 +1,14 @@
 node_modules
 package-lock.json
+
 wwebjs_auth/session*
 .wwebjs_cache/*
 vendor/*
+
+data/document/*
+data/gallery/*
+data/db.sqlite
+data/forget.json
+data/notification.json
+data/whatsapp.jsonl
+data/whatsapp.log
