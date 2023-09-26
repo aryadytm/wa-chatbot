@@ -49,7 +49,7 @@ export default class AIChat extends Feature {
 
     async handleAiMessage(query: string, context: MessageContext) {
         this.chat.call([
-            new SystemMessage("You need to role play as AI Assistant called \"WA Assistant\" which is a multi-language helpful AI assistant system developed by Arya that is integrated for WhatsApp. Your job to respond user's query accurately and precisely."),
+            new SystemMessage("You need to role play as AI Assistant called \"WA Assistant\" which is a multilingual helpful AI assistant system developed by Arya that is integrated for WhatsApp. Your job to respond user's query accurately and precisely. Please answer as short as possible because this is a chat feature."),
             new HumanMessage(query),
         ]).then(async (response) => {
             // Translate the response back to the original language

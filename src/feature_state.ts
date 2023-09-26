@@ -1,6 +1,11 @@
 import * as utils from "./utils"
 
 
+let intents = {
+    IDLE: 0,
+}
+
+
 class FeatureState {
     intent: any
     lastActionTime: number
@@ -34,6 +39,7 @@ class FeatureState {
     
     detach() {
         this.isAttached = false
+        this.intent = intents.IDLE
         this.onDetach()
     }
     
