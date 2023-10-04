@@ -14,9 +14,10 @@ const api_port = 40001
 const api = express();
 
 const wa = new WAClient();
-const chatbot = new Chatbot(wa.client)
+const chatbot = new Chatbot()
 
 wa.initialize(chatbot)
+chatbot.initialize(wa.client)
 
 
 /**

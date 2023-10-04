@@ -23,7 +23,11 @@ export default class Chatbot {
     attachedFeature: KeyValueStore
     featureTimeoutSecs: number
     
-    constructor(messenger: WAWebJS.Client) {
+    constructor() {
+        
+    }
+    
+    initialize(messenger: WAWebJS.Client) {
         
         // NOTE: Features to use
         const FEATURES = [

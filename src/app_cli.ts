@@ -12,7 +12,8 @@ const messenger = {
     }
 }
 
-const app = new Chatbot(messenger)
+const app = new Chatbot()
+app.initialize(messenger)
 
 
 // 1 on 1 chat command

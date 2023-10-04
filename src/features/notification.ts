@@ -11,7 +11,7 @@ import MessageContext from "../context";
 
 
 export default class Notification extends Feature {
-    messenger: any
+    messenger: WAWebJS.Client
     path_data: string
     timezone: string
     data: object
