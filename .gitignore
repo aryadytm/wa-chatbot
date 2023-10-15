@@ -12,3 +12,5 @@ data/forget.json
 data/notification.json
 data/whatsapp.jsonl
 data/whatsapp.log
+
+whatsapp.jsonl
