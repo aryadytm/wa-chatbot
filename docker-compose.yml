@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     volumes:
     - ./data:/workdir/data
+    - ./data_default:/workdir/data_default
     - ./src:/workdir/src
     - ./package.json:/workdir/package.json
     - ./wwebjs_auth:/workdir/wwebjs_auth
