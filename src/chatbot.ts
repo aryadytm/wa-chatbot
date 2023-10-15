@@ -1,5 +1,9 @@
 //@ts-check
 
+// Generics
+import fs from "fs"
+import path from "path"
+
 // Features
 import Feature from "./features/feature"
 import Idle from "./features/idle"
@@ -48,13 +52,10 @@ export default class Chatbot {
     }
     
     prepareDatastore() {
-        const fs = require('fs');
-        const path = require('path');
         const dir = './data';
         const defaultDir = './data_default';
         // Start copying
         fs.readdirSync(defaultDir).forEach((file: string) => {
-            
             if (fs.existsSync(path.join(dir, file))) {
                 // File exists
                 return
@@ -62,7 +63,27 @@ export default class Chatbot {
             console.log(`Copying ${file} to ${dir}`)
             const src = path.join(defaultDir, file);
             const dest = path.join(dir, file);
-            fs.copyFileSync(src, dest);
+            if (fs.lstatSync(src).isDirectory()) {
+                fs.mkdirSync(dest);
+                this.copyFolderRecursiveSync(src, dest);
+            } else {
+                fs.copyFileSync(src, dest);
+            }
+        });
+    }
+
+    copyFolderRecursiveSync(src: string, dest: string) {
+        if (!fs.existsSync(dest)) {
+            fs.mkdirSync(dest);
+        }
+        fs.readdirSync(src).forEach((file: string) => {
+            const srcPath = path.join(src, file);
+            const destPath = path.join(dest, file);
+            if (fs.lstatSync(srcPath).isDirectory()) {
+                this.copyFolderRecursiveSync(srcPath, destPath);
+            } else {
+                fs.copyFileSync(srcPath, destPath);
+            }
         });
     }
     
