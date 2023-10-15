@@ -12,18 +12,28 @@ export default class Forget extends Feature {
     maxEntriesPerAuthor: number
     
     constructor() {
-        super()
+        super();
         
         this.intents = {
             IDLE: 0,
             CHOOSE_LIST: 1,
             CREATE_TITLE: 11,
             CREATE_CONTENT: 12,
-        }
+        };
         
-        this.path_data = 'data/forget.json'
-        this.data = JSON.parse(fs.readFileSync(this.path_data))
-        this.maxEntriesPerAuthor = 100
+        this.path_data = 'data/forget.json';
+        try {
+            if (fs.existsSync(this.path_data)) {
+                this.data = JSON.parse(fs.readFileSync(this.path_data));
+            } else {
+                fs.writeFileSync(this.path_data, JSON.stringify({}));
+                this.data = {};
+            }
+        } catch (err) {
+            console.error(err);
+            this.data = {};
+        }
+        this.maxEntriesPerAuthor = 100;
     }
     
     _commit() {
