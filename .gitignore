@@ -2,7 +2,7 @@ node_modules
 package-lock.json
 
 wwebjs_auth/session*
-.wwebjs_cache/*
-vendor/*
+.wwebjs_cache
+vendor/
 
 data/
