@@ -23,11 +23,8 @@ export default class Chatbot {
     attachedFeature: KeyValueStore
     featureTimeoutSecs: number
     
-    constructor() {
-        
-    }
-    
     initialize(messenger: WAWebJS.Client) {
+        this.prepareDatastore()
         
         // NOTE: Features to use
         const FEATURES = [
@@ -48,6 +45,25 @@ export default class Chatbot {
         
         this.attachedFeature = new KeyValueStore(new Idle())
         this.featureTimeoutSecs = 300
+    }
+    
+    prepareDatastore() {
+        const fs = require('fs');
+        const path = require('path');
+        const dir = './data';
+        const defaultDir = './data_default';
+        // Start copying
+        fs.readdirSync(defaultDir).forEach((file: string) => {
+            
+            if (fs.existsSync(path.join(dir, file))) {
+                // File exists
+                return
+            }
+            console.log(`Copying ${file} to ${dir}`)
+            const src = path.join(defaultDir, file);
+            const dest = path.join(dir, file);
+            fs.copyFileSync(src, dest);
+        });
     }
     
     getAttachedFeature(sender: string): Feature {

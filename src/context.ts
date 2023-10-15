@@ -29,6 +29,8 @@ export default class MessageContext {
 }
 
 
+import path from 'path';
+
 function appendMessageToFile(message: Message, response: string | wa.MessageContent, filePath: string): void {
     const obj = {
         timestamp: message.timestamp,
@@ -41,5 +43,9 @@ function appendMessageToFile(message: Message, response: string | wa.MessageCont
         response: typeof response === 'string' ? response : 'MessageContent',
     }
     const jsonl = JSON.stringify(obj);
-    fs.appendFileSync(filePath, jsonl + '\n');
+    const resolvedPath = path.resolve(filePath);
+    if (!fs.existsSync(resolvedPath)) {
+        fs.writeFileSync(resolvedPath, '');
+    }
+    fs.appendFileSync(resolvedPath, jsonl + '\n');
 }
