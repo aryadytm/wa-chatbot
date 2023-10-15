@@ -1,9 +1,9 @@
 ---
 version: '3'
 services:
-  waapidbuild:
+  wa-chatbot:
     build: .
-    container_name: wa-api-d-build
+    container_name: wa-chatbot
     restart: unless-stopped
     volumes:
     - ./data:/workdir/data
