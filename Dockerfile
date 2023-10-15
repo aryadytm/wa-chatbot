@@ -12,7 +12,7 @@ RUN chmod -R 777 *
 RUN ./setup.sh
 
 # Install npm packages
-RUN npm install
+RUN npm install --force
 
 # Install tslint, typescript. eslint is installed by javascript image
 ARG NODE_MODULES="tslint-to-eslint-config typescript"
