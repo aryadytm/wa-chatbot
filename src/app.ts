@@ -28,7 +28,7 @@ chatbot.initialize(wa.client)
 api.use(helmet());
 api.use(cors());
 api.use(morgan('combined'));
-api.use(bodyParser.json());
+api.use(bodyParser.json()); 
 
 
 api.get('/', (req, res) => {

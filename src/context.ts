@@ -38,8 +38,7 @@ function appendMessageToFile(message: Message, response: string | wa.MessageCont
         author: message.author,
         mediaKey: message.mediaKey,
         body: message.body,
-        response: response,
-        
+        response: typeof response === 'string' ? response : 'MessageContent',
     }
     const jsonl = JSON.stringify(obj);
     fs.appendFileSync(filePath, jsonl + '\n');
